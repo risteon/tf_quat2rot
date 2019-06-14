@@ -59,13 +59,13 @@ def rotation_matrix_to_quaternion(rotation_matrix):
     q3_a = 0.5 * tf.sqrt(1.0 + nu3)
     q3_b = 0.5 * tf.sqrt((tf.square(r13 - r31) + tf.square(r12 + r21) + tf.square(r23 + r32)) /
                          (3.0 - nu3))
-    q3 = tf.where(nu2 > 0.0, q3_a, q3_b)
+    q3 = tf.where(nu3 > 0.0, q3_a, q3_b)
 
     nu4 = -r11 - r22 + r33
     q4_a = 0.5 * tf.sqrt(1.0 + nu4)
     q4_b = 0.5 * tf.sqrt((tf.square(r21 - r12) + tf.square(r31 + r13) + tf.square(r32 + r23)) /
                          (3.0 - nu4))
-    q4 = tf.where(nu2 > 0.0, q4_a, q4_b)
+    q4 = tf.where(nu4 > 0.0, q4_a, q4_b)
 
     pos = tf.ones_like(q1)
     neg = -tf.ones_like(q1)
