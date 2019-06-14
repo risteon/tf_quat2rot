@@ -9,4 +9,7 @@ setup(name='tf_quat2rot',
       license='MIT',
       packages=['tf_quat2rot'],
       zip_safe=False,
-      install_requires=['tensorflow'])
+      install_requires=['tensorflow'],
+      test_suite='nose.collector',
+      tests_require=['nose'],
+)
