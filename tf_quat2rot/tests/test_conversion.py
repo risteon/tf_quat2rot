@@ -59,14 +59,16 @@ class TestConversion(tf.test.TestCase):
             ],
             dtype=tf.float64
         )
-        quaternions = tf_quat2rot.rotation_matrix_to_quaternion(rotation_matrices)
+        quaternions = tf_quat2rot.rotation_matrix_to_quaternion(rotation_matrices,
+                                                                assert_valid_rotation=True)
         self.assertAllClose(tf.constant([[0.0, 0.0, 0.0, 1.0],
                                          [0.0, 1.0, 0.0, 0.0],
                                          [0.0, 0.0, 1.0, 0.0]], dtype=rotation_matrices.dtype),
                             tf.abs(quaternions))
 
-    def test_unnormalized(self):
+    def test_unnormalized_quaternion(self):
         unit_quaternion = tf.constant([0.99, 0.0, 0.0, 0.0], dtype=tf.float64)
+        _ = tf_quat2rot.quaternion_to_rotation_matrix(unit_quaternion, assert_normalized=False)
         with self.assertRaises(tf.errors.InvalidArgumentError) as context:
             _ = tf_quat2rot.quaternion_to_rotation_matrix(unit_quaternion, assert_normalized=True)
 
@@ -74,6 +76,18 @@ class TestConversion(tf.test.TestCase):
         r = tf_quat2rot.quaternion_to_rotation_matrix(unit_quaternion, assert_normalized=True,
                                                       normalize=True)
         self.assertAllClose(tf.eye(3, dtype=unit_quaternion.dtype), r)
+
+    def test_invalid_rotation(self):
+        rotation_matrix = tf.constant(
+            [[-1.0, 0.001, 0.0],
+             [0.0, -1.0, 0.0],
+             [0.0, 0.0, 1.0]], dtype=tf.float64)
+        _ = tf_quat2rot.rotation_matrix_to_quaternion(rotation_matrix)
+        with self.assertRaises(tf.errors.InvalidArgumentError) as context:
+            _ = tf_quat2rot.rotation_matrix_to_quaternion(rotation_matrix,
+                                                          assert_valid_rotation=True)
+
+        self.assertTrue('Invalid rotation matrix.' in str(context.exception))
 
 
 if __name__ == '__main__':
