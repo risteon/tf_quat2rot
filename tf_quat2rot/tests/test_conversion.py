@@ -38,6 +38,43 @@ class TestConversion(tf.test.TestCase):
         self.assertAllClose(tf.constant([0.0, 0.0, 0.0, 1.0], dtype=rotation_matrix.dtype),
                             tf.abs(quaternion))
 
+    def test_flips(self):
+        rotation_matrices = tf.constant(
+            [
+                [
+                    [-1.0,  0.0,  0.0],
+                    [ 0.0, -1.0,  0.0],
+                    [ 0.0,  0.0,  1.0]
+                ],
+                [
+                    [ 1.0,  0.0,  0.0],
+                    [ 0.0, -1.0,  0.0],
+                    [ 0.0,  0.0, -1.0]
+                ],
+                [
+                    [-1.0,  0.0,  0.0],
+                    [ 0.0,  1.0,  0.0],
+                    [ 0.0,  0.0, -1.0]
+                ]
+            ],
+            dtype=tf.float64
+        )
+        quaternions = tf_quat2rot.rotation_matrix_to_quaternion(rotation_matrices)
+        self.assertAllClose(tf.constant([[0.0, 0.0, 0.0, 1.0],
+                                         [0.0, 1.0, 0.0, 0.0],
+                                         [0.0, 0.0, 1.0, 0.0]], dtype=rotation_matrices.dtype),
+                            tf.abs(quaternions))
+
+    def test_unnormalized(self):
+        unit_quaternion = tf.constant([0.99, 0.0, 0.0, 0.0], dtype=tf.float64)
+        with self.assertRaises(tf.errors.InvalidArgumentError) as context:
+            _ = tf_quat2rot.quaternion_to_rotation_matrix(unit_quaternion, assert_normalized=True)
+
+        self.assertTrue('not normalized' in str(context.exception))
+        r = tf_quat2rot.quaternion_to_rotation_matrix(unit_quaternion, assert_normalized=True,
+                                                      normalize=True)
+        self.assertAllClose(tf.eye(3, dtype=unit_quaternion.dtype), r)
+
 
 if __name__ == '__main__':
     tf.test.main()  # run all unit tests﻿

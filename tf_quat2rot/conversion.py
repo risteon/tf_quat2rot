@@ -7,32 +7,41 @@ __version__ = '0.1.0'
 import tensorflow as tf
 
 
-def quaternion_to_rotation_matrix(quaternion):
-    # Todo: optional assert that quaternion is valid
+def quaternion_to_rotation_matrix(quaternion: tf.Tensor,
+                                  assert_normalized: bool = False,
+                                  normalize: bool = False):
+    if normalize:
+        quaternion = tf.math.l2_normalize(quaternion, axis=-1)
+    c_ops = []
+    if assert_normalized:
+        c_ops.append(tf.debugging.assert_near(
+            tf.ones_like(quaternion[..., 0]), tf.linalg.norm(quaternion, axis=-1),
+            message='Input quaternions are not normalized.'))
 
-    # aliases
-    w = quaternion[..., 0]
-    x = quaternion[..., 1]
-    y = quaternion[..., 2]
-    z = quaternion[..., 3]
+    with tf.control_dependencies(c_ops):
+        # aliases
+        w = quaternion[..., 0]
+        x = quaternion[..., 1]
+        y = quaternion[..., 2]
+        z = quaternion[..., 3]
 
-    # rotation matrix from quaternion
-    r11 = 1 - 2 * (y * y + z * z)
-    r12 = 2 * (x * y - z * w)
-    r13 = 2 * (x * z + y * w)
+        # rotation matrix from quaternion
+        r11 = 1 - 2 * (y * y + z * z)
+        r12 = 2 * (x * y - z * w)
+        r13 = 2 * (x * z + y * w)
 
-    r21 = 2 * (x * y + z * w)
-    r22 = 1 - 2 * (x * x + z * z)
-    r23 = 2 * (y * z - x * w)
+        r21 = 2 * (x * y + z * w)
+        r22 = 1 - 2 * (x * x + z * z)
+        r23 = 2 * (y * z - x * w)
 
-    r31 = 2 * (x * z - y * w)
-    r32 = 2 * (y * z + x * w)
-    r33 = 1 - 2 * (x * x + y * y)
+        r31 = 2 * (x * z - y * w)
+        r32 = 2 * (y * z + x * w)
+        r33 = 1 - 2 * (x * x + y * y)
 
-    tf_transform_0 = tf.stack([r11, r21, r31], axis=-1)
-    tf_transform_1 = tf.stack([r12, r22, r32], axis=-1)
-    tf_transform_2 = tf.stack([r13, r23, r33], axis=-1)
-    return tf.stack([tf_transform_0, tf_transform_1, tf_transform_2], axis=-1)
+        tf_transform_0 = tf.stack([r11, r21, r31], axis=-1)
+        tf_transform_1 = tf.stack([r12, r22, r32], axis=-1)
+        tf_transform_2 = tf.stack([r13, r23, r33], axis=-1)
+        return tf.stack([tf_transform_0, tf_transform_1, tf_transform_2], axis=-1)
 
 
 def rotation_matrix_to_quaternion(rotation_matrix):
