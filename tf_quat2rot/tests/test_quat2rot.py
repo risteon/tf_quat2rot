@@ -102,12 +102,20 @@ class TestRandomRotations(tf.test.TestCase):
         bd = tf.random.uniform(shape=(3, ), dtype=tf.int32, minval=1, maxval=5)
         _ = tf_quat2rot.random_uniform_quaternion(batch_dim=bd, assert_normalized=True)
 
-    def test_cycle_conversion(self):
+    def test_cycle_conversion_qrq(self):
         random_quats = tf_quat2rot.random_uniform_quaternion(batch_dim=(3, 4, 5))
         random_rotations = tf_quat2rot.quaternion_to_rotation_matrix(random_quats)
         random_quats_restored = tf_quat2rot.rotation_matrix_to_quaternion(random_rotations)
         self.assertEqual((3, 4, 5, 4), random_quats_restored.shape)
         self.assertAllClose(random_quats, random_quats_restored)
+
+    def test_cycle_conversion_rqr(self):
+        random_rot = tf_quat2rot.random_uniform_rotation_matrix(batch_dim=(2, 5),
+                                                                assert_valid=True)
+        random_quat = tf_quat2rot.rotation_matrix_to_quaternion(random_rot)
+        random_rot_restored = tf_quat2rot.quaternion_to_rotation_matrix(random_quat)
+        self.assertEqual((2, 5, 3, 3), random_rot_restored.shape)
+        self.assertAllClose(random_rot, random_rot_restored)
 
 
 if __name__ == '__main__':

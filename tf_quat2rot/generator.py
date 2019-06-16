@@ -5,7 +5,8 @@ __email__ = 'c.rist@posteo.de'
 
 import math
 import tensorflow as tf
-from .check import assert_normalized_quaternion
+from .check import assert_normalized_quaternion, assert_valid_rotation
+from .converter import quaternion_to_rotation_matrix
 
 
 def random_uniform_quaternion(batch_dim=(), dtype=tf.float64, assert_normalized: bool = False):
@@ -38,3 +39,11 @@ def random_uniform_quaternion(batch_dim=(), dtype=tf.float64, assert_normalized:
     if assert_normalized:
         quats = assert_normalized_quaternion(quats)
     return quats
+
+
+def random_uniform_rotation_matrix(batch_dim=(), dtype=tf.float64, assert_valid: bool = False):
+    q = random_uniform_quaternion(batch_dim, dtype, assert_normalized=False)
+    r = quaternion_to_rotation_matrix(q)
+    if assert_valid:
+        r = assert_valid_rotation(r)
+    return r
