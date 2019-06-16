@@ -12,4 +12,5 @@ setup(name='tf_quat2rot',
       install_requires=['tensorflow'],
       test_suite='nose.collector',
       tests_require=['nose'],
-)
+      python_requires='>=3.5',
+      )
