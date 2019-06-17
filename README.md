@@ -10,7 +10,8 @@ Written in pure tensorflow.
 
 ## Installation
 
-Python Versions from 3.5+ are supported. Install from PyPi with ```pip install tf_quat2rot```
+Python Versions from 3.5+ are supported. Install from PyPi with `pip install tf_quat2rot`.
+`tf_quat2rot` requires TensorFlow. If you want it to be installed automatically choose between the CPU and GPU version with `pip install tf_quat2rot[tf]` or `pip install tf_quat2rot[tf_gpu]` respectively.
 
 ## Definitions and sample usage
 
