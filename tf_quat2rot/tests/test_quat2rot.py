@@ -2,7 +2,8 @@
 
 import tf_quat2rot
 import tensorflow as tf
-tf.enable_eager_execution()
+if int(tf.__version__.split('.')[0]) < 2:
+    tf.enable_eager_execution()
 
 
 class TestConversion(tf.test.TestCase):
