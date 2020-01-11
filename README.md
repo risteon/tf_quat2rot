@@ -1,4 +1,5 @@
 # tf_quat2rot
+[![Build Status](https://travis-ci.org/risteon/tf_quat2rot.svg?branch=master)](https://travis-ci.org/risteon/tf_quat2rot)
 Convert between quaternion and rotation matrices in tensorflow.
 
 
@@ -19,7 +20,9 @@ Quaternions are defined as `w-x-y-z`. `w` is defined as positive. Usage is strai
 
 ```python3
 >>> import tensorflow as tf
->>> tf.enable_eager_execution()
+>>> if int(tf.__version__.split('.')[0]) < 2:
+>>>     tf.enable_eager_execution()
+
 >>> from tf_quat2rot import quaternion_to_rotation_matrix, rotation_matrix_to_quaternion
 
 >>> r = quaternion_to_rotation_matrix(tf.constant([1.0, 0.0, 0.0, 0.0]))

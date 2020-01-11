@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='tf_quat2rot',
-      version='1.0.2',
+      version='1.0.3',
       description='Convert between quaternion and rotation matrices in tensorflow.',
       url='http://github.com/risteon/tf_quat2rot',
       author='Christoph Rist',
