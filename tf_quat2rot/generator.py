@@ -20,15 +20,15 @@ def random_uniform_quaternion(batch_dim=(), dtype=tf.float64, assert_normalized:
         batch_dim = tf.convert_to_tensor(batch_dim, dtype=tf.int32)
     assert batch_dim.ndim == 1
 
-    u = tf.random_uniform(shape=tf.concat((batch_dim, (3, )), axis=0), dtype=dtype)
-    sqrt_1_u0 = tf.sqrt(1 - u[..., 0])
-    sqrt_u0 = tf.sqrt(u[..., 0])
+    u = tf.random.uniform(shape=tf.concat((batch_dim, (3, )), axis=0), dtype=dtype)
+    sqrt_1_u0 = tf.math.sqrt(1 - u[..., 0])
+    sqrt_u0 = tf.math.sqrt(u[..., 0])
     pi2_u1 = u[..., 1] * 2 * math.pi
     pi2_u2 = u[..., 2] * 2 * math.pi
-    w = sqrt_1_u0 * tf.sin(pi2_u1)
-    x = sqrt_1_u0 * tf.cos(pi2_u1)
-    y = sqrt_u0 * tf.sin(pi2_u2)
-    z = sqrt_u0 * tf.cos(pi2_u2)
+    w = sqrt_1_u0 * tf.math.sin(pi2_u1)
+    x = sqrt_1_u0 * tf.math.cos(pi2_u1)
+    y = sqrt_u0 * tf.math.sin(pi2_u2)
+    z = sqrt_u0 * tf.math.cos(pi2_u2)
     quats = tf.stack([w, x, y, z], axis=-1)
 
     # w should be positive. So flip sign if negative
