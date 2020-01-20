@@ -14,7 +14,7 @@ setup(name='tf_quat2rot',
       tests_require=['nose'],
       python_requires='>=3.5',
       extras_require={
-          'tf': ['tensorflow'],
-          'tf_gpu': ['tensorflow-gpu'],
+          'tf-cpu': ['tensorflow-cpu'],
+          'tf-gpu': ['tensorflow-gpu'],
       },
       )
