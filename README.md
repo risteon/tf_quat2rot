@@ -1,5 +1,7 @@
 # tf_quat2rot
 [![Build Status](https://travis-ci.org/risteon/tf_quat2rot.svg?branch=master)](https://travis-ci.org/risteon/tf_quat2rot)
+[![License](https://img.shields.io/pypi/l/tf-quat2rot)](https://pypi.org/project/tf-quat2rot/)
+[![PyPI version](https://img.shields.io/pypi/v/tf-quat2rot)](https://pypi.org/project/tf-quat2rot/)
 
 Convert between quaternion and rotation matrices in tensorflow.
 
