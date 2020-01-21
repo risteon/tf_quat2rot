@@ -18,7 +18,7 @@ def random_uniform_quaternion(batch_dim=(), dtype=tf.float64, assert_normalized:
         assert batch_dim.dtype == tf.int32
     else:
         batch_dim = tf.convert_to_tensor(batch_dim, dtype=tf.int32)
-    assert batch_dim.ndim == 1
+    assert batch_dim.shape.ndims == 1
 
     u = tf.random.uniform(shape=tf.concat((batch_dim, (3, )), axis=0), dtype=dtype)
     sqrt_1_u0 = tf.math.sqrt(1 - u[..., 0])

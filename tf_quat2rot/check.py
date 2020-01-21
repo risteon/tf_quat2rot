@@ -11,7 +11,7 @@ def assert_normalized_quaternion(quaternion: tf.Tensor):
         tf.debugging.assert_near(
             tf.ones_like(quaternion[..., 0]), tf.linalg.norm(quaternion, axis=-1),
             message='Input quaternions are not normalized.')]):
-        return quaternion
+        return tf.identity(quaternion)
 
 
 def assert_valid_rotation(rotation_matrix: tf.Tensor):
