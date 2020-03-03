@@ -116,3 +116,18 @@ def invert_quaternion(quaternion: tf.Tensor):
     :return:
     """
     return tf.math.l2_normalize(conjugate_quaternion(quaternion), axis=-1)
+
+
+def multiply_quaternions(q1: tf.Tensor, q2: tf.Tensor):
+    w1, w2 = q1[..., 0], q2[..., 0]
+    v1, v2 = q1[..., 1:4], q2[..., 1:4]
+
+    v = w1[:, None] * v2 + w2[:, None] * v1 + tf.linalg.cross(v1, v2)
+    w = w1 * w2 - tf.reduce_sum(v1 * v2, axis=-1)
+    return tf.concat((w[:, None], v), axis=-1)
+
+
+def quaternion_rotation_angle(quaternion: tf.Tensor):
+    return 2.0 * tf.math.atan2(
+        tf.linalg.norm(quaternion[..., 1:4], axis=-1), quaternion[..., 0]
+    )
