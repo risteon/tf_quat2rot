@@ -96,3 +96,23 @@ def rotation_matrix_to_quaternion(
     q3 *= q3_sign
     q4 *= q4_sign
     return tf.stack([q1, q2, q3, q4], axis=-1)
+
+
+def conjugate_quaternion(quaternion: tf.Tensor):
+    """
+
+    :param quaternion:
+    :return:
+    """
+    return tf.concat(
+        (quaternion[..., 0:1], tf.math.negative(quaternion[..., 1:4])), axis=-1
+    )
+
+
+def invert_quaternion(quaternion: tf.Tensor):
+    """
+
+    :param quaternion:
+    :return:
+    """
+    return tf.math.l2_normalize(conjugate_quaternion(quaternion), axis=-1)
