@@ -14,6 +14,9 @@ def _process_batch_dim(batch_dim):
         assert batch_dim.dtype == tf.int32
     else:
         batch_dim = tf.convert_to_tensor(batch_dim, dtype=tf.int32)
+    if batch_dim.shape.ndims == 0:
+        batch_dim = tf.expand_dims(batch_dim, axis=0)
+
     assert batch_dim.shape.ndims == 1
     return batch_dim
 
