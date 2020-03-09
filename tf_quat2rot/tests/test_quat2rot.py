@@ -13,7 +13,7 @@ tf_version_1 = int(tf.__version__.split(".")[0]) < 2
 class TestConversion(tf.test.TestCase):
     def test_identity_rotation(self, dtype=tf.dtypes.float32):
         with self.session(use_gpu=False):
-            identity_quaternion = tf.constant([1.0, 0.0, 0.0, 0.0], dtype=dtype)
+            identity_quaternion = tf_quat2rot.generator.identity_quaternion(dtype=dtype)
             identity_rotation_matrix = tf.eye(3, dtype=identity_quaternion.dtype)
             rotation_matrix = tf_quat2rot.quaternion_to_rotation_matrix(
                 identity_quaternion
@@ -162,6 +162,16 @@ class TestRandomRotations(tf.test.TestCase):
                 )
 
             self.assertAllClose(random_rots, random_rot_restored)
+
+
+class TestGenerationIdentity(tf.test.TestCase):
+    def test_generation_identity(self):
+        with self.session(use_gpu=False):
+            # random batch dimension (==dynamic batch dimension)
+            bd = tf.random.uniform(shape=(3,), dtype=tf.int32, minval=1, maxval=5)
+            _ = tf_quat2rot.identity_quaternion(batch_dim=bd)
+            if tf_version_1:
+                _.eval()
 
 
 if __name__ == "__main__":

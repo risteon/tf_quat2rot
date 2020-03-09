@@ -9,6 +9,15 @@ from .check import assert_normalized_quaternion, assert_valid_rotation
 from .converter import quaternion_to_rotation_matrix
 
 
+def _process_batch_dim(batch_dim):
+    if isinstance(batch_dim, tf.Tensor):
+        assert batch_dim.dtype == tf.int32
+    else:
+        batch_dim = tf.convert_to_tensor(batch_dim, dtype=tf.int32)
+    assert batch_dim.shape.ndims == 1
+    return batch_dim
+
+
 def random_uniform_quaternion(
     batch_dim=(), dtype=tf.float64, assert_normalized: bool = False
 ):
@@ -16,11 +25,7 @@ def random_uniform_quaternion(
 
     Reference: http://planning.cs.uiuc.edu/node198.html
     """
-    if isinstance(batch_dim, tf.Tensor):
-        assert batch_dim.dtype == tf.int32
-    else:
-        batch_dim = tf.convert_to_tensor(batch_dim, dtype=tf.int32)
-    assert batch_dim.shape.ndims == 1
+    batch_dim = _process_batch_dim(batch_dim)
 
     u = tf.random.uniform(shape=tf.concat((batch_dim, (3,)), axis=0), dtype=dtype)
     sqrt_1_u0 = tf.math.sqrt(1 - u[..., 0])
@@ -54,3 +59,11 @@ def random_uniform_rotation_matrix(
     if assert_valid:
         r = assert_valid_rotation(r)
     return r
+
+
+def identity_quaternion(batch_dim=(), dtype=tf.dtypes.float64):
+    batch_dim = _process_batch_dim(batch_dim)
+    o = tf.ones(shape=tf.concat((batch_dim, [1]), axis=0), dtype=dtype)
+    z = tf.zeros(shape=tf.concat((batch_dim, [3]), axis=0), dtype=dtype)
+    quat = tf.concat((o, z), axis=-1)
+    return quat

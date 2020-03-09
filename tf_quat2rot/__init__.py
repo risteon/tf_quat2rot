@@ -7,6 +7,7 @@ from .converter import quaternion_to_rotation_matrix
 from .converter import rotation_matrix_to_quaternion
 from .generator import random_uniform_quaternion
 from .generator import random_uniform_rotation_matrix
+from .generator import identity_quaternion
 
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "rotation_matrix_to_quaternion",
     "random_uniform_quaternion",
     "random_uniform_rotation_matrix",
+    "identity_quaternion",
 ]
