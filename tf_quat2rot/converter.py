@@ -131,3 +131,11 @@ def quaternion_rotation_angle(quaternion: tf.Tensor):
     return 2.0 * tf.math.atan2(
         tf.linalg.norm(quaternion[..., 1:4], axis=-1), quaternion[..., 0]
     )
+
+
+def rotate_vector(vector: tf.Tensor, quaternion: tf.Tensor) -> tf.Tensor:
+    # make pure quaternions from vector
+    vector = tf.concat((tf.zeros_like(vector[..., 0:1]), vector), axis=-1)
+    conj = conjugate_quaternion(quaternion)
+    q = multiply_quaternions(quaternion, vector)
+    return multiply_quaternions(q, conj)[..., 1:4]
