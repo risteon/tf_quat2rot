@@ -10,4 +10,4 @@ install:
   - pip install -q tensorflow==$TENSORFLOW_VERSION
   - pip install .
 script:
-  - python setup.py test
+  - pytest

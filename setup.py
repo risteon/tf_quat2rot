@@ -12,7 +12,7 @@ setup(
     zip_safe=False,
     install_requires=[],
     test_suite="nose.collector",
-    tests_require=["nose"],
+    tests_require=["nose", "pytest"],
     python_requires=">=3.5",
     extras_require={"tf-cpu": ["tensorflow-cpu"], "tf-gpu": ["tensorflow-gpu"]},
 )
