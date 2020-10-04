@@ -3,8 +3,8 @@
 __author__ = """Christoph Rist"""
 __email__ = "c.rist@posteo.de"
 
-import tf_quat2rot
 import tensorflow as tf
+import tf_quat2rot
 
 # flag if tensorflow 1.X is in use (no eager execution)
 tf_version_1 = int(tf.__version__.split(".")[0]) < 2
