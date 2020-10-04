@@ -4,6 +4,7 @@ __author__ = """Christoph Rist"""
 __email__ = "c.rist@posteo.de"
 
 import tensorflow as tf
+
 from .check import assert_normalized_quaternion, assert_valid_rotation
 
 

@@ -3,8 +3,8 @@
 __author__ = """Christoph Rist"""
 __email__ = "c.rist@posteo.de"
 
-import tf_quat2rot
 import tensorflow as tf
+import tf_quat2rot
 
 
 class TestGraphMode(tf.test.TestCase):
